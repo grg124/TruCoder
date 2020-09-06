@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "854181723827",
+    "firebase_url": "https://tru-coder-2685f.firebaseio.com",
+    "project_id": "tru-coder-2685f",
+    "storage_bucket": "tru-coder-2685f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854181723827:android:588410ea1f25a544b83ac6",
+        "android_client_info": {
+          "package_name": "com.carrot.trucoder2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854181723827-lglugldp3t3bc4s9lqskip7738v00oit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carrot.trucoder2",
+            "certificate_hash": "2434e355530e2a8867811da73de4a776a4c186b9"
+          }
+        },
+        {
+          "client_id": "854181723827-acs8n70ihprfufmiqqlsh1jq8li29c4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM-BsyDy9txhOf_5TYjMO3VYAX7VPkPwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854181723827-acs8n70ihprfufmiqqlsh1jq8li29c4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
