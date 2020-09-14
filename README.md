@@ -9,3 +9,5 @@ TruCoder keeps you in the know about various upcoming competitive coding contest
 - Compete with your friends in the leaderboard
 - View your recent participation on CodeChef and Codeforces
 - View your rating changes over time graphically
+
+You can find the app on playstore by clicking <a href="https://play.google.com/store/apps/details?id=com.carrot.trucoder2"> here </a>
