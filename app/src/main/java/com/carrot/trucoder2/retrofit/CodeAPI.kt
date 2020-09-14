@@ -12,11 +12,11 @@ interface CodeAPI {
     @GET("codechef")
     suspend fun fetchCodechefUser(@Query("user") user:String):Response<ResponseCodechef>
 
-    @GET("codeforces/friends")
-    suspend fun fetchFriendsListCF(@Query("handles") handles:String):Response<ResponseLeaderboard>
+    @GET("codeforcesFriends")
+    suspend fun fetchFriendsListCF(@Query("user") handles:String):Response<ResponseLeaderboard>
 
-    @GET("codechef/friends")
-    suspend fun fetchFriendListCC(@Query("handles") handles :String) :Response<ResponseLeaderboard>
+    @GET("codechefFriends")
+    suspend fun fetchFriendListCC(@Query("user") handles :String) :Response<ResponseLeaderboard>
 
     @GET("contests")
     suspend fun fetchContest():Response<ResponseContest>

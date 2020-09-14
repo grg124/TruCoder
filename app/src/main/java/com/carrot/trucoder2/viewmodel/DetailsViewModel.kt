@@ -1,29 +1,24 @@
 package com.carrot.trucoder2.viewmodel
 
-
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.carrot.trucoder2.model.*
 import com.carrot.trucoder2.repository.CodeRespository
-import com.carrot.trucoder2.utils.Resource
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
-class DetailsViewModel(val respository: CodeRespository) :ViewModel() {
+class DetailsViewModel(private val respository: CodeRespository) :ViewModel() {
 
     val result1: MutableLiveData<Int> = MutableLiveData();
     val result2: MutableLiveData<Int> = MutableLiveData();
 
-
-
     fun getCodeforcesUser(handle: String) = viewModelScope.launch {
-        val response = respository.fetchCodeforcesUser(handle)
+        val response = respository.fetchFriendListCF(handle)
         if (response.isSuccessful) {
-            response.body()?.let { result ->
-                result1.postValue(1)
+            response.body()?.let {
+                if(it.status == "Success")
+                    result1.postValue(1)
+                else
+                    result1.postValue(0)
             }
         } else {
             result1.postValue(0)
@@ -31,10 +26,13 @@ class DetailsViewModel(val respository: CodeRespository) :ViewModel() {
     }
 
     fun getCodeChefUser(handle: String) = viewModelScope.launch {
-        val response = respository.fetchCodechefUser(handle)
+        val response = respository.fetchFriendListCC(handle)
         if (response.isSuccessful) {
-            response.body()?.let { result ->
-                result2.postValue(1)
+            response.body()?.let {
+                if(it.status == "Success")
+                    result2.postValue(1)
+                else
+                    result2.postValue(0)
             }
         } else {
             result2.postValue(0)

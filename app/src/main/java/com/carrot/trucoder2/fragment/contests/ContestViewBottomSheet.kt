@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.carrot.trucoder2.R
 import com.carrot.trucoder2.model.ResultContest
+import com.carrot.trucoder2.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 
@@ -26,11 +27,15 @@ class ContestViewBottomSheet(var contest: ResultContest): BottomSheetDialogFragm
         val name = contentView.findViewById<TextView>(R.id.contestBottomSheet_name)
         val logo = contentView.findViewById<ImageView>(R.id.contestBottomSheet_logo)
         val calbtn = contentView.findViewById<ImageButton>(R.id.contestBottomSheet_remind)
-        startDate.text = contest.start
-        startTime.text = contest.start_time
-        endDate.text = contest.end
-        endTime.text = contest.end_time
-        duration.text = contest.duration.toString()
+        val StartDate = Constants.ConvertDateFromMill(contest.timestamp)
+        val StartTime = Constants.ConvertTimeFomMill(contest.timestamp)
+        val EndDate = Constants.ConvertDateFromMill(contest.endstamp)
+        val EndTime = Constants.ConvertTimeFomMill(contest.endstamp)
+        startDate.text = StartDate
+        startTime.text = StartTime
+        endDate.text = EndDate
+        endTime.text = EndTime
+        duration.text = contest.duration
         name.text = contest.event
         when(contest.id){
             1 -> logo.setImageResource(R.drawable.codeforces)

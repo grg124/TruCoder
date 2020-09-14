@@ -1,21 +1,30 @@
 package com.carrot.trucoder2.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.carrot.trucoder2.R
 import com.carrot.trucoder2.activity.MainActivity
 import com.carrot.trucoder2.model.RecentParticipation
 import com.carrot.trucoder2.model.ResponseCodechef
 import com.carrot.trucoder2.utils.Constants
+import com.carrot.trucoder2.utils.Resource
+import com.carrot.trucoder2.viewmodel.DetailsActivityViewModelProviderFactory
+import com.carrot.trucoder2.viewmodel.DetailsViewModel
 import com.carrot.trucoder2.viewmodel.MainActivityViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.android.synthetic.main.fragment_codechef.*
+import kotlinx.android.synthetic.main.fragment_codechef_handle.*
 
 
 class CodechefFragment : Fragment(R.layout.fragment_codechef) {
@@ -23,21 +32,50 @@ class CodechefFragment : Fragment(R.layout.fragment_codechef) {
     private lateinit var viewModel : MainActivityViewModel
     private var flag  = 1
     private var list :List<RecentParticipation> = ArrayList()
-
+    var handle = "=_="
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
+
+
+        val sharedPref = (activity as MainActivity).getSharedPreferences("secret" , Context.MODE_PRIVATE)
+        val cchandle = sharedPref.getString("CCH" ,"=_=")!!
+
+
         viewModel.codechefUserLD.observe(viewLifecycleOwner , {
-            it.data?.let { it1 -> setTextView(it1)
-                flag = 2
-                mainview.visibility = View.VISIBLE
-                anim_1.visibility = View.GONE
-                list = it.data.resultCodechefContest_ratings
+            when(it){
+                is Resource.Success ->{
+                    it.data?.let { it1 -> setTextView(it1)
+                        flag = 2
+                        codechef_errorState.visibility =View.GONE
+                        mainview.visibility = View.VISIBLE
+                        anim_1.visibility = View.GONE
+                        list = it.data.resultCodechefContest_ratings
+                        viewModel.RefreshCCFriends(cchandle)
+                    }
+                }
+                is Resource.Error->{
+                    anim_1.visibility = View.GONE
+                    codechef_errorState.visibility = View.VISIBLE
+                }
+                is Resource.Loading->{
+                    mainview.visibility = View.GONE
+                    anim_1.visibility = View.VISIBLE
+                    codechef_errorState.visibility = View.GONE
+                }
             }
 
         })
+
+
+        codechef_errorState.setOnClickListener{
+            mainview.visibility = View.GONE
+            anim_1.visibility = View.VISIBLE
+            codechef_errorState.visibility = View.GONE
+            viewModel.getCodeChefUser(cchandle)
+        }
         fragcodechefcontent_leaderboadbtn.setOnClickListener{
             viewModel.getAllCCFriends().observe(viewLifecycleOwner , {
                 val bundle = Bundle()
@@ -114,8 +152,6 @@ class CodechefFragment : Fragment(R.layout.fragment_codechef) {
 
 
     }
-
-
 
     private fun setTextView(responseCodechef: ResponseCodechef) {
         fragcodechefcontent_overallcrank.text = responseCodechef.global_rank.toString()

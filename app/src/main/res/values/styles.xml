@@ -6,14 +6,14 @@
         <item name="colorAccent">#0049b5</item>
         <item name="android:statusBarColor">@color/whiteDark</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorPrimary">#fafafa</item>
         <item name="colorPrimaryDark">#c7c7c7</item>
         <item name="android:statusBarColor">@color/whiteDark</item>
         <item name="colorAccent">#2196f3</item>
     </style>
 
-    <style name="AppTheme.Color" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="AppTheme.Color" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorPrimary">#fafafa</item>
         <item name="colorPrimaryDark">#c7c7c7</item>
         <item name="colorAccent">#2196f3</item>

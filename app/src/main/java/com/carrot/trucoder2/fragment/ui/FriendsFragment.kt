@@ -12,6 +12,7 @@ import com.carrot.trucoder2.R
 import com.carrot.trucoder2.activity.MainActivity
 import com.carrot.trucoder2.adapter.LeaderboardAdapter
 import com.carrot.trucoder2.model.Leaderboard
+import com.carrot.trucoder2.utils.Constants
 import com.carrot.trucoder2.viewmodel.MainActivityViewModel
 import kotlinx.android.synthetic.main.fragment_friends.*
 
@@ -30,12 +31,6 @@ class FriendsFragment : Fragment(R.layout.fragment_friends){
         val id = arguments?.getInt("ID")!!
         leaderboardAdapter = LeaderboardAdapter(requireContext())
 
-/*
-        (activity as MainActivity).setSupportActionBar(cctoolbar)
-        (activity as MainActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-
- */
 
         val sharedPref = activity?.getSharedPreferences("secret", Context.MODE_PRIVATE)
         if (sharedPref != null) {
@@ -91,7 +86,7 @@ class FriendsFragment : Fragment(R.layout.fragment_friends){
                         refreshCF()
                     }
                     2 -> {
-                        if (cchandle == list[viewHolder.adapterPosition].Name)
+                        if (cchandle != list[viewHolder.adapterPosition].Name)
                             viewModel.DeleteFriends(list[viewHolder.adapterPosition])
                         refreshCC()
                     }
@@ -110,7 +105,6 @@ class FriendsFragment : Fragment(R.layout.fragment_friends){
 
     private fun refreshCF(){
         viewModel.RefreshCFFriends(cfhandle)
-        println("here outside")
         viewModel.getAllCFFriends().observe(viewLifecycleOwner, {
             leaderboardAdapter.submitList(it)
             list = it

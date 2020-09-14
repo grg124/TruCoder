@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.carrot.trucoder2.R
 import com.carrot.trucoder2.model.ResultContest
+import com.carrot.trucoder2.utils.Constants.Companion.ConvertDateFromMill
+import com.carrot.trucoder2.utils.Constants.Companion.ConvertTimeFomMill
 
 class FragmentSubContestRecycle(private val listener: (ResultContest) -> Unit) : RecyclerView.Adapter<FragmentSubContestRecycle.MyViewHolder>() {
 
@@ -23,11 +25,11 @@ class FragmentSubContestRecycle(private val listener: (ResultContest) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val start  = "${list[position].start} ${list[position].start_time}"
-        val end = "${list[position].end} ${list[position].end_time}"
+        val StartDate = ConvertDateFromMill(list[position].timestamp)
+        val StartTime = ConvertTimeFomMill(list[position].timestamp)
         holder.event.text = list[position].event
-        holder.startDate.text = list[position].start
-        holder.startTime.text = list[position].start_time
+        holder.startDate.text = StartDate
+        holder.startTime.text =StartTime
         when(list[position].id){
             1->holder.logo.setImageResource(R.drawable.codeforces)
             2->holder.logo.setImageResource(R.drawable.codechef)

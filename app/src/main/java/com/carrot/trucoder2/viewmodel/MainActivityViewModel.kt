@@ -18,22 +18,17 @@ class MainActivityViewModel(val respository: CodeRespository) :ViewModel() {
     val contestLD : MutableLiveData<Resource<List<ResultContest>>> = MutableLiveData();
     val codechefFriendsLD : MutableLiveData<Resource<ResponseLeaderboard>> = MutableLiveData();
     val codeforcesFriendsLD : MutableLiveData<Resource<ResponseLeaderboard>> = MutableLiveData();
-
-
-    init {
-        getContestData()
-
-    }
-
-
+    val result1: MutableLiveData<Int> = MutableLiveData();
+    val result2: MutableLiveData<Int> = MutableLiveData();
 
     fun RefreshCCFriends(handles: String) = viewModelScope.launch {
         val list = respository.RefreshCC()
         var str = ""
         for(i in list)
             str = "$str$i;"
-        if(list.size == 0)
+        if(list.isEmpty())
             str = "$handles;"
+        str = str.substring(0 , str.length-1)
         val response = respository.fetchFriendListCC(str)
         if(response.isSuccessful){
             response.body()?.let {
@@ -49,8 +44,10 @@ class MainActivityViewModel(val respository: CodeRespository) :ViewModel() {
         var str = ""
         for(i in list)
             str = "$str$i;"
-        if(list.size == 0)
+        if(list.isEmpty())
             str = "$handles;"
+        str = str.substring(0 , str.length-1)
+
         val response = respository.fetchFriendListCF(str)
         if(response.isSuccessful){
             response.body()?.let {
@@ -63,42 +60,60 @@ class MainActivityViewModel(val respository: CodeRespository) :ViewModel() {
     }
 
     fun getCodeforcesUser(handle : String) = viewModelScope.launch {
-        codeforcesUserLD.postValue(Resource.Loading())
-        val response = respository.fetchCodeforcesUser(handle)
-        if(response.isSuccessful) {
-            response.body()?.let { result ->
-                codeforcesUserLD.postValue(Resource.Success(result))
+        try{
+            codeforcesUserLD.postValue(Resource.Loading())
+            val response = respository.fetchCodeforcesUser(handle)
+            if(response.isSuccessful) {
+                response.body()?.let { result ->
+                    if(result.status == "Success")
+                        codeforcesUserLD.postValue(Resource.Success(result))
+                    else
+                        codechefUserLD.postValue(Resource.Error(null, response.message()))
+                }
             }
-        }
-        else{
-            codeforcesUserLD.postValue(Resource.Error(null, response.message()))
+            else{
+                codeforcesUserLD.postValue(Resource.Error(null, response.message()))
+            }
+        }catch (e:java.lang.Exception){
+            codeforcesUserLD.postValue(Resource.Error(null, "Timeout"))
         }
     }
 
     fun getCodeChefUser(handle:String) = viewModelScope.launch {
-        codechefUserLD.postValue(Resource.Loading())
-        val response = respository.fetchCodechefUser(handle)
-        if(response.isSuccessful) {
-            response.body()?.let { result ->
-                codechefUserLD.postValue(Resource.Success(result))
+        try{
+            codechefUserLD.postValue(Resource.Loading())
+            val response = respository.fetchCodechefUser(handle)
+            if(response.isSuccessful) {
+                response.body()?.let { result ->
+                    if(result.status == "Success")
+                        codechefUserLD.postValue(Resource.Success(result))
+                    else
+                        codechefUserLD.postValue(Resource.Error(null, response.message()))
+                }
             }
-        }
-        else{
-            codechefUserLD.postValue(Resource.Error(null, response.message()))
+            else{
+                codechefUserLD.postValue(Resource.Error(null, response.message()))
+            }
+        }catch (e:Exception){
+            codechefUserLD.postValue(Resource.Error(null, "Timeout"))
         }
     }
 
     fun getContestData() = viewModelScope.launch {
-        contestLD.postValue(Resource.Loading())
-        val response = respository.fetchContests()
-        if(response.isSuccessful){
-            response.body()?.let {
-                respository.NukeContests()
-                respository.InsertContests(it.resultContest)
+        try {
+            contestLD.postValue(Resource.Loading())
+            val response = respository.fetchContests()
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    if(response.body()!!.status == "success")
+                    respository.NukeContests()
+                    respository.InsertContests(it.resultContest)
+                    }
+            } else {
+                contestLD.postValue(Resource.Error(null, response.message()))
             }
-        }
-        else{
-            contestLD.postValue(Resource.Error(null , response.message()))
+        }catch (e:Exception){
+            contestLD.postValue(Resource.Error(null, "Timeout"))
         }
     }
 
@@ -174,6 +189,37 @@ class MainActivityViewModel(val respository: CodeRespository) :ViewModel() {
     fun DeleteFriends(leaderboard: Leaderboard) = viewModelScope.launch {
         respository.DeleteFriends(leaderboard)
     }
+
+
+
+    fun CheckCodeforcesUser(handle: String) = viewModelScope.launch {
+        val response = respository.fetchFriendListCF(handle)
+        if (response.isSuccessful) {
+            response.body()?.let {
+                if(it.status == "Success")
+                    result1.postValue(1)
+                else
+                    result1.postValue(0)
+            }
+        } else {
+            result1.postValue(0)
+        }
+    }
+
+    fun CheckCodeChefUser(handle: String) = viewModelScope.launch {
+        val response = respository.fetchFriendListCC(handle)
+        if (response.isSuccessful) {
+            response.body()?.let {
+                if(it.status == "Success")
+                    result2.postValue(1)
+                else
+                    result2.postValue(0)
+            }
+        } else {
+            result2.postValue(0)
+        }
+    }
+
 
 
 

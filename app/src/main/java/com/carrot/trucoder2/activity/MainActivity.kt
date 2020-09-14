@@ -2,6 +2,7 @@ package com.carrot.trucoder2.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,8 @@ import com.carrot.trucoder2.repository.CodeRespository
 import com.carrot.trucoder2.viewmodel.MainActivityViewModel
 import com.carrot.trucoder2.viewmodel.MainActivityViewModelProviderFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.Exception
+import java.net.SocketTimeoutException
 
 
 class MainActivity : AppCompatActivity(){
@@ -35,10 +38,11 @@ class MainActivity : AppCompatActivity(){
 
         val viewModelProviderFactory = MainActivityViewModelProviderFactory(codeRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainActivityViewModel::class.java)
-        viewModel.getCodeChefUser(cchandle)
+
         viewModel.getCodeforcesUser(cfhandle)
-        viewModel.RefreshCCFriends(cchandle)
-        viewModel.RefreshCFFriends(cfhandle)
+        viewModel.getContestData()
+        viewModel.getCodeChefUser(cchandle)
+
 
 
         val navView: BottomNavigationView = binding.navView

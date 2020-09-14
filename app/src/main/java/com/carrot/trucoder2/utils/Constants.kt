@@ -2,6 +2,7 @@ package com.carrot.trucoder2.utils
 
 import android.app.Activity
 import android.content.Context
+import android.text.format.DateFormat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.carrot.trucoder2.R
@@ -60,6 +61,23 @@ class Constants {
             }
             return c
         }
+
+        fun ConvertDateFromMill(mill :Long):String{
+            val date = DateFormat.format("dd-MMM-yyyy", mill*1000).toString()
+            return date
+        }
+
+        fun ConvertTimeFomMill(mill:Long):String{
+            val time = DateFormat.format("hh:mm a", mill*1000).toString()
+            return time
+        }
+        fun ConvertDateTimeFomMill(mill:Long):String{
+            val time = DateFormat.format("dd-MMM-yyyy hh:mm a", mill*10).toString()
+            return time
+        }
+
+
+
 
     }
 }

@@ -10,5 +10,6 @@ data class ResponseCodforces(
     val max_rating: Int,
     val photo: String,
     val rank: String,
-    val rating: Int
+    val rating: Int,
+    val status :String
 )

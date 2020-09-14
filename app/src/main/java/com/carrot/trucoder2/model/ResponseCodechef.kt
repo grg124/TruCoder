@@ -12,5 +12,6 @@ data class ResponseCodechef(
     val handle: String,
     val highest_rating: Int,
     val rating: Int,
-    val stars: String
+    val stars: String,
+    val status : String
 )

@@ -19,9 +19,12 @@ import com.carrot.trucoder2.activity.MainActivity
 import com.carrot.trucoder2.database.CodeDatabase
 import com.carrot.trucoder2.repository.CodeRespository
 import com.carrot.trucoder2.viewmodel.MainActivityViewModel
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.coroutines.launch
+import javax.annotation.Resource
 
     class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
@@ -52,6 +55,28 @@ import kotlinx.coroutines.launch
         codeforces.setOnClickListener{
             alertDialog("Codeforces Handle", 1)
         }
+
+        review.setOnClickListener(View.OnClickListener {
+            val manager = ReviewManagerFactory.create(requireContext())
+            val request = manager.requestReviewFlow()
+            request.addOnCompleteListener { request ->
+                if (request.isSuccessful) {
+                    // We got the ReviewInfo object
+                    val reviewInfo= request.result
+                    val flow = manager.launchReviewFlow(activity as MainActivity, reviewInfo)
+                    flow.addOnCompleteListener { _ ->
+                        // The flow has finished. The API does not indicate whether the user
+                        // reviewed or not, or even whether the review dialog was shown. Thus, no
+                        // matter the result, we continue our app flow.
+                        Toast.makeText(requireContext() , "Thank you for your time" , Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext() , "Please try again later" , Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+        })
 
         bug.setOnClickListener{
             val emailIntent = Intent(Intent.ACTION_VIEW , Uri.parse("mailto:" + "2000apoorv@gmail.com"))
@@ -96,7 +121,7 @@ import kotlinx.coroutines.launch
         github.setOnClickListener{
             val browserIntent = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/MaskedCarrot?tab=repositories")
+                Uri.parse("https://github.com/MaskedCarrot/TruCoder")
             )
             startActivity(browserIntent)
         }
@@ -135,6 +160,14 @@ import kotlinx.coroutines.launch
             val alert = dialogBuilder.create()
             alert.setTitle(title)
             alert.show()
+
+
+
+            viewModel.result1.observe(viewLifecycleOwner,{
+                when(it){
+                    1->{}
+                }
+            })
         }
 
 
@@ -158,7 +191,7 @@ import kotlinx.coroutines.launch
                                 Toast.LENGTH_LONG
                             )
                             toast.show()
-                            editor.commit()
+                            editor.apply()
                         }
                     } else if (!res.isSuccessful) {
                         val toast = Toast.makeText(
@@ -174,10 +207,17 @@ import kotlinx.coroutines.launch
                     if (res.isSuccessful) {
                         codeRespository.deleteAllCC()
                         viewModel.getCodechefFriends("$handle;")
+                        viewModel.getCodeChefUser(handle)
                         if (sharedPref != null) {
                             val editor = sharedPref.edit()
                             editor.putString("CCH", handle)
-                            editor.commit()
+                            val toast = Toast.makeText(
+                                requireContext(),
+                                "Handle changed successfully",
+                                Toast.LENGTH_LONG
+                            )
+                            toast.show()
+                            editor.apply()
                         }
 
                     } else {

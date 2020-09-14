@@ -14,6 +14,7 @@ import com.carrot.trucoder2.R
 import com.carrot.trucoder2.activity.MainActivity
 import com.carrot.trucoder2.database.CodeDatabase
 import com.carrot.trucoder2.repository.CodeRespository
+import com.carrot.trucoder2.utils.Constants.Companion.hideSoftKeyboard
 import com.carrot.trucoder2.utils.Constants.Companion.showSoftKeyboard
 import com.carrot.trucoder2.viewmodel.MainActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -45,10 +46,11 @@ class BSFriendSearch(val platform: Int) : BottomSheetDialogFragment(){
 
 
         search.setOnClickListener(View.OnClickListener {
-            val name = handle.text.toString() + ";"
+            val name = handle.text.toString()
             findUser(platform, name)
             result.observe(this, {
                 if (it == 1) {
+                   hideSoftKeyboard(requireActivity())
                     dialog.dismiss()
                 } else if (it == 0) {
                     val toast = Toast.makeText(
